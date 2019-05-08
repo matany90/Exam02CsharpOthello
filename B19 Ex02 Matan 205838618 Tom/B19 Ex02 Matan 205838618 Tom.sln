@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ex02_Othelo", "Ex02_Othelo\Ex02_Othelo.csproj", "{CED6576B-3CEE-4BE5-A9F3-E868AB66C4DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CED6576B-3CEE-4BE5-A9F3-E868AB66C4DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CED6576B-3CEE-4BE5-A9F3-E868AB66C4DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CED6576B-3CEE-4BE5-A9F3-E868AB66C4DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CED6576B-3CEE-4BE5-A9F3-E868AB66C4DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB77BDDD-EF1C-4D6F-B1F2-6B4E3F11D961}
+	EndGlobalSection
+EndGlobal
