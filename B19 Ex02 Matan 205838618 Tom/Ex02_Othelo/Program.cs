@@ -8,6 +8,7 @@ namespace Ex02_Othelo
         public static void Main()
         {
             Console.WriteLine("test11");
+            Ex02.ConsoleUtils.Screen.Clear();
         }
     }
 }
