@@ -28,7 +28,6 @@ namespace Ex02_Othelo
             }
 
             board += Environment.NewLine + "   " + new string('=', 4 * i_BoardSize) + Environment.NewLine;
-
             for (int i = 0; i < i_BoardSize; i++)
             {
                 board += rowMark.ToString() + " ";
@@ -47,9 +46,11 @@ namespace Ex02_Othelo
                             break;
                     }
                 }
+
                 board += "|" + Environment.NewLine + "   " + new string('=', 4 * i_BoardSize) + Environment.NewLine;
                 rowMark++;
             }
+
             board += "Player " + (i_PlayerTurn + 1) + " Turn" + Environment.NewLine;
             Console.Write(board);
         }
