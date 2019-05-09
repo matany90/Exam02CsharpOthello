@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Ex02_Othelo
 {
@@ -68,6 +69,7 @@ After your choose, press Enter:");
             m_Board[middleIndex - 1, middleIndex - 1] = 1;
             m_Board[middleIndex, middleIndex - 1] = 2;
             m_Board[middleIndex - 1, middleIndex] = 2;
+            m_Board[1, 4] = 1;
         }
 
         public void PlayTurn()
@@ -98,12 +100,166 @@ After your choose, press Enter:");
                 {
                     if (m_Board[i, j] == 0)
                     {
-                        possibleMoves.Add((char)('A' + j) + (i + 1).ToString());
+                        if (IsPossibleMove(i, j))
+                        {
+                            possibleMoves.Add((char)('A' + j) + (i + 1).ToString());
+                        }
                     }
                 }
             }
-
             return possibleMoves;
+        }
+
+        public bool IsPossibleMove(int i_Row, int i_Col)
+        {
+            bool legalMove = false;
+            List<string> regexExpression = new List<string>();
+
+            m_Board[i_Row, i_Col] = m_PlayerTurn + 1;
+            regexExpression.Add(checkRight(i_Row, i_Col));
+            regexExpression.Add(checkLeft(i_Row, i_Col));
+            regexExpression.Add(checkDown(i_Row, i_Col));
+            regexExpression.Add(checkUp(i_Row, i_Col));
+            regexExpression.Add(checkBottomRight(i_Row, i_Col));
+            regexExpression.Add(checkBottomLeft(i_Row, i_Col));
+            regexExpression.Add(checkTopRight(i_Row, i_Col));
+            regexExpression.Add(checkTopLeft(i_Row, i_Col));
+
+
+            foreach (string expression in regexExpression)
+            {
+                if (m_PlayerTurn == 0)
+                {
+                    legalMove = Regex.IsMatch(expression, @"\b0*12+1+2*0*\b");
+                    if (legalMove)
+                    {
+                        //test print
+                        Console.WriteLine("Expression " + expression + " for index: " + (char)('A' + i_Col) + (i_Row + 1).ToString());
+                        //test print
+                        break;
+                    }
+                }
+                else
+                {
+                    legalMove = Regex.IsMatch(expression, @"\b0*21+2+1*0*\b");
+                    if (legalMove)
+                    {
+                        //test print
+                        Console.WriteLine("Expression " + expression + " for index: " + (char)('A' + i_Col) + (i_Row + 1).ToString());
+                        //test print
+                        break;
+                    }
+                }
+            }
+            m_Board[i_Row, i_Col] = 0;
+
+            return legalMove;
+        }
+
+        private string checkRight(int i_Row, int i_Col)
+        {
+            string rightString = "";
+            while (i_Col < m_BoardSize)
+            {
+                rightString += m_Board[i_Row, i_Col].ToString();
+                i_Col++;
+            }
+
+            return rightString;
+        }
+
+        private string checkLeft(int i_Row, int i_Col)
+        {
+            string leftString = "";
+
+            while (i_Col >= 0)
+            {
+                leftString += m_Board[i_Row, i_Col].ToString();
+                i_Col--;
+            }
+
+            return leftString;
+        }
+        private string checkDown(int i_Row, int i_Col)
+        {
+            string downString = "";
+
+            while (i_Row >= 0)
+            {
+                downString += m_Board[i_Row, i_Col].ToString();
+                i_Row--;
+            }
+
+            return downString;
+        }
+
+        private string checkUp(int i_Row, int i_Col)
+        {
+            string upString = "";
+
+            while (i_Row < m_BoardSize)
+            {
+                upString += m_Board[i_Row, i_Col].ToString();
+                i_Row++;
+            }
+
+            return upString;
+        }
+
+        private string checkBottomRight(int i_Row, int i_Col)
+        {
+            string bottomRightString = "";
+
+            while (i_Row < m_BoardSize && i_Col < m_BoardSize)
+            {
+                bottomRightString += m_Board[i_Row, i_Col].ToString();
+                i_Row++;
+                i_Col++;
+            }
+
+            return bottomRightString;
+        }
+
+        private string checkBottomLeft(int i_Row, int i_Col)
+        {
+            string bottomLeftString = "";
+
+            while (i_Row < m_BoardSize && i_Col >= 0)
+            {
+                bottomLeftString += m_Board[i_Row, i_Col].ToString();
+                i_Row++;
+                i_Col--;
+            }
+
+            return bottomLeftString;
+        }
+
+        private string checkTopRight(int i_Row, int i_Col)
+        {
+            string topRightString = "";
+
+            while (i_Row >= 0 && i_Col < m_BoardSize)
+            {
+                topRightString += m_Board[i_Row, i_Col].ToString();
+                i_Row--;
+                i_Col++;
+            }
+
+            return topRightString;
+        }
+
+        private string checkTopLeft(int i_Row, int i_Col)
+        {
+            string topLeftString = "";
+
+            while (i_Row >= 0 && i_Col >= 0)
+            {
+                topLeftString += m_Board[i_Row, i_Col].ToString();
+                i_Row--;
+                i_Col--;
+            }
+
+            return topLeftString;
         }
     }
 }
