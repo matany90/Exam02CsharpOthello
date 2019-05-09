@@ -7,18 +7,19 @@ namespace Ex02_Othelo
     {
         public static void Main()
         {
-            Console.WriteLine("test11");
-            Ex02.ConsoleUtils.Screen.Clear();
+            Game game = new Game();
 
+            //Console.WriteLine("test11");
+            //Ex02.ConsoleUtils.Screen.Clear();
 
             //test
-            int[,] arr = new int[8, 8];
-            arr[4, 4] = 1;
-            arr[3, 3] = 1;
-            arr[4, 3] = 2;
-            arr[3, 4] = 2;
-            UserUI.DrawBoard(8, arr, 1);
-            Console.ReadLine();
+            //int[,] arr = new int[8, 8];
+            //arr[4, 4] = 1;
+            //arr[3, 3] = 1;
+            //arr[4, 3] = 2;
+            //arr[3, 4] = 2;
+            //UserUI.DrawBoard(8, arr, 1);
+            //Console.ReadLine();
         }
     }
 }

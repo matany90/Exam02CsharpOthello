@@ -4,6 +4,16 @@ namespace Ex02_Othelo
 {
     class UserUI
     {
+        public static void ShowMessage(string i_MessageToShow)
+        {
+            Console.WriteLine(i_MessageToShow);
+        }
+
+        public static string GetInputFromUser()
+        {
+            return Console.ReadLine();
+        }
+
         public static void DrawBoard(int i_BoardSize, int[,] i_Pieces, int i_PlayerTurn)
         {
             char colMark = 'A';
