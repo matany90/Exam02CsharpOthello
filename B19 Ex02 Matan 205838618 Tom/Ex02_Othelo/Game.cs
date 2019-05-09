@@ -16,13 +16,50 @@ namespace Ex02_Othelo
 
         public Game()
         {
-            Controller.ShowMessage(string.Format(
-@"Welcome to Othelo!
-Please Write your Name and then press Enter:"
-));
+            Controller.ShowMessage("Welcome to Othelo!");
+            initUserPreferences();
+            initBoard();
+            //Controller.DrawBorad(m_BoardSize, m_Board, 1);
+        }
+
+        private void initUserPreferences()
+        {
+            Controller.ShowMessage("Please enter name for Player 1 and then press Enter: ");
             m_FirstUser = Controller.GetInputFromUser();
 
- 
+            Controller.ShowMessage(
+@"Would you like to play against another player, or against the computer?
+Please press P for a game against another player, and C for playing against the computer.
+After your choose, press Enter:");
+            m_IsTwoPlayer = Controller.GetTwoPlayerUserChoice();
+
+            if (m_IsTwoPlayer)
+            {
+                Controller.ShowMessage("Please enter name for Player 2 and then press Enter: ");
+                m_SecondUser = Controller.GetInputFromUser();
+            }
+            else
+            {
+                m_SecondUser = "Computer";
+            }
+
+            Controller.ShowMessage(
+@"Please select the board size for the game.
+For board size 6X6, please press button 6
+For board size 8X8, please press button 8
+After your choose, press Enter:");
+            m_BoardSize = Controller.GetBoardSizeUserChoice();
+        }
+
+        private void initBoard()
+        {
+            int middleIndex = m_BoardSize / 2;
+       
+            m_Board = new int[m_BoardSize, m_BoardSize];
+            m_Board[middleIndex, middleIndex] = 1;
+            m_Board[middleIndex - 1, middleIndex - 1] = 1;
+            m_Board[middleIndex, middleIndex - 1] = 2;
+            m_Board[middleIndex - 1, middleIndex] = 2;
         }
     }
 }
