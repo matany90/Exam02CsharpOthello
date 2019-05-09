@@ -41,7 +41,7 @@ namespace Ex02_Othelo
             return int.Parse(playerChoice);
         }
 
-        public static void DrawBorad(int i_BoardSize, int[,] i_Pieces, int i_PlayerTurn)
+        public static void DrawBoard(int i_BoardSize, int[,] i_Pieces, int i_PlayerTurn)
         {
             UserUI.DrawBoard(i_BoardSize, i_Pieces, i_PlayerTurn);
         }
