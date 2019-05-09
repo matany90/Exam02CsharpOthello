@@ -20,7 +20,14 @@ namespace Ex02_Othelo
             Controller.ShowMessage("Welcome to Othelo!");
             initUserPreferences();
             initBoard();
-            //Controller.DrawBorad(m_BoardSize, m_Board, 1);
+            m_PlayerTurn = 0;
+            m_GameOver = false;
+            Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
+            while (!m_GameOver)
+            {
+                PlayTurn();
+            }
+
         }
 
         private void initUserPreferences()
