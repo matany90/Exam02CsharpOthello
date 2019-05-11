@@ -69,7 +69,7 @@ After your choose, press Enter:");
             m_Board[middleIndex - 1, middleIndex - 1] = 1;
             m_Board[middleIndex, middleIndex - 1] = 2;
             m_Board[middleIndex - 1, middleIndex] = 2;
-            m_Board[1, 4] = 1;
+            //m_Board[1, 4] = 1;
         }
 
         public void PlayTurn()
@@ -78,6 +78,7 @@ After your choose, press Enter:");
 
             Controller.GetTurn(out rowIndex, out colIndex, CalculateMoves());
             m_Board[rowIndex, colIndex] = m_PlayerTurn + 1;
+            UpdateBoard(rowIndex, colIndex);
             m_PlayerTurn = (m_PlayerTurn + 1) % 2;
             Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
             if (m_PlayerTurn == 0)
@@ -260,6 +261,114 @@ After your choose, press Enter:");
             }
 
             return topLeftString;
+        }
+
+        public void UpdateBoard(int i_Row, int i_Col)
+        {
+            bool legalMove;
+            string[] directions = { "Right", "Left", "Down", "Up", "DownRight", "DownLeft", "UpRight", "UpLeft" };
+            int directionIndex = 0;
+            List<string> regexExpression = new List<string>();
+
+            regexExpression.Add(checkRight(i_Row, i_Col));
+            regexExpression.Add(checkLeft(i_Row, i_Col));
+            regexExpression.Add(checkDown(i_Row, i_Col));
+            regexExpression.Add(checkUp(i_Row, i_Col));
+            regexExpression.Add(checkBottomRight(i_Row, i_Col));
+            regexExpression.Add(checkBottomLeft(i_Row, i_Col));
+            regexExpression.Add(checkTopRight(i_Row, i_Col));
+            regexExpression.Add(checkTopLeft(i_Row, i_Col));
+
+
+            foreach (string expression in regexExpression)
+            {
+                if (m_PlayerTurn == 0)
+                {
+                    legalMove = Regex.IsMatch(expression, @"\b0*12+1+2*0*\b");
+                    if (legalMove)
+                    {
+                        UpdateLine(i_Row, i_Col, directions[directionIndex]);
+                    }
+                }
+                else
+                {
+                    legalMove = Regex.IsMatch(expression, @"\b0*21+2+1*0*\b");
+                    if (legalMove)
+                    {
+                        UpdateLine(i_Row, i_Col, directions[directionIndex]);
+                    }
+                }
+                directionIndex++;
+            }
+        }
+
+        private void UpdateLine(int i_Row, int i_Col, string i_Direction)
+        {
+            switch (i_Direction)
+            {
+                case "Right":
+                    while (m_Board[i_Row, i_Col + 1] != m_PlayerTurn + 1)
+                    {
+                        m_Board[i_Row, i_Col + 1] = m_PlayerTurn + 1;
+                        i_Col++;
+                    }
+                    break;
+                case "Left":
+                    while (m_Board[i_Row, i_Col - 1] != m_PlayerTurn + 1)
+                    {
+                        m_Board[i_Row, i_Col - 1] = m_PlayerTurn + 1;
+                        i_Col--;
+                    }
+                    break;
+                case "Up":
+                    while (m_Board[i_Row + 1, i_Col] != m_PlayerTurn + 1)
+                    {
+                        m_Board[i_Row + 1, i_Col] = m_PlayerTurn + 1;
+                        i_Row++;
+                    }
+                    break;
+                case "Down":
+                    while (m_Board[i_Row - 1, i_Col] != m_PlayerTurn + 1)
+                    {
+                        m_Board[i_Row - 1, i_Col] = m_PlayerTurn + 1;
+                        i_Row--;
+                    }
+                    break;
+                case "UpRight":
+                    while (m_Board[i_Row - 1, i_Col + 1] != m_PlayerTurn + 1)
+                    {
+                        m_Board[i_Row - 1, i_Col + 1] = m_PlayerTurn + 1;
+                        i_Row--;
+                        i_Col++;
+                    }
+                    break;
+                case "UpLeft":
+                    while (m_Board[i_Row - 1, i_Col - 1] != m_PlayerTurn + 1)
+                    {
+                        m_Board[i_Row - 1, i_Col - 1] = m_PlayerTurn + 1;
+                        i_Row--;
+                        i_Col--;
+                    }
+                    break;
+                case "DownRight":
+                    while (m_Board[i_Row + 1, i_Col + 1] != m_PlayerTurn + 1)
+                    {
+                        m_Board[i_Row + 1, i_Col + 1] = m_PlayerTurn + 1;
+                        i_Row++;
+                        i_Col++;
+                    }
+                    break;
+                case "DownLeft":
+                    while (m_Board[i_Row + 1, i_Col - 1] != m_PlayerTurn + 1)
+                    {
+                        m_Board[i_Row + 1, i_Col - 1] = m_PlayerTurn + 1;
+                        i_Row++;
+                        i_Col--;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
