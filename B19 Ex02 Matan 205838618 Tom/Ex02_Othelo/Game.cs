@@ -20,18 +20,27 @@ namespace Ex02_Othelo
         {
             Controller.ShowMessage("Welcome to Othelo!");
             initUserPreferences();
+            StartGame();
+        }
+
+        private void StartGame()
+        {
             initBoard();
-            m_PlayerTurn = 0;
-            m_GameOver = false;
             Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
             UserUI.ShowMessage("F:" + m_FirstUserScore + " S:" + m_SecondUserScore);
-
             while (!m_GameOver)
             {
                 PlayTurn();
             }
-            Controller.EndGame(m_FirstUser, m_SecondUser, m_FirstUserScore, m_SecondUserScore);
 
+            if (Controller.EndGame(m_FirstUser, m_SecondUser, m_FirstUserScore, m_SecondUserScore))
+            {
+                Controller.ShowMessage("Thanks for playing!");
+            }
+            else
+            {
+                StartGame();
+            }
         }
 
         private void initUserPreferences()
@@ -74,10 +83,11 @@ After your choose, press Enter:");
             m_Board[middleIndex - 1, middleIndex] = 2;
             m_FirstUserScore = 2;
             m_SecondUserScore = 2;
-            //m_Board[1, 4] = 1;
+            m_PlayerTurn = 0;
+            m_GameOver = false;
         }
 
-        public void PlayTurn()
+        private void PlayTurn()
         {
             int rowIndex, colIndex;
             List<string> possibleMoves = CalculateMoves();
@@ -109,7 +119,7 @@ After your choose, press Enter:");
             UserUI.ShowMessage("F:" + m_FirstUserScore + " S:" + m_SecondUserScore);
         }
 
-        public List<string> CalculateMoves()
+        private List<string> CalculateMoves()
         {
             List<string> possibleMoves = new List<string>();
 
@@ -129,7 +139,7 @@ After your choose, press Enter:");
             return possibleMoves;
         }
 
-        public bool IsPossibleMove(int i_Row, int i_Col)
+        private bool IsPossibleMove(int i_Row, int i_Col)
         {
             bool legalMove = false;
             List<string> regexExpression = new List<string>();
@@ -281,7 +291,7 @@ After your choose, press Enter:");
             return topLeftString;
         }
 
-        public void UpdateBoard(int i_Row, int i_Col)
+        private void UpdateBoard(int i_Row, int i_Col)
         {
             bool legalMove;
             string[] directions = { "Right", "Left", "Down", "Up", "DownRight", "DownLeft", "UpRight", "UpLeft" };
