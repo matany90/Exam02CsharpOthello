@@ -46,17 +46,27 @@ namespace Ex02_Othelo
             UserUI.DrawBoard(i_BoardSize, i_Pieces, i_PlayerTurn);
         }
 
-        public static void GetTurn(out int o_RowIndex, out int o_ColIndex, List<string> i_PossibleMoves)
+        public static void GetTurn(out int o_RowIndex, out int o_ColIndex, List<string> i_PossibleMoves, bool i_IsTwoPlayer, int i_PlayerTurn)
         {
             string inputFromUserStr = "";
 
-            inputFromUserStr = UserUI.GetInputFromUser();
-            inputFromUserStr = inputFromUserStr.ToUpper();
-            while (!i_PossibleMoves.Contains(inputFromUserStr))
+            if (i_IsTwoPlayer || (!i_IsTwoPlayer && i_PlayerTurn == 0))
             {
-                UserUI.ShowMessage("Illegal move, try again");
                 inputFromUserStr = UserUI.GetInputFromUser();
                 inputFromUserStr = inputFromUserStr.ToUpper();
+                while (!i_PossibleMoves.Contains(inputFromUserStr))
+                {
+                    UserUI.ShowMessage("Illegal move, try again");
+                    inputFromUserStr = UserUI.GetInputFromUser();
+                    inputFromUserStr = inputFromUserStr.ToUpper();
+                }
+            }
+            else
+            {
+                System.Threading.Thread.Sleep(1000);
+                Random rnd = new Random();
+                int randomIndex = rnd.Next(0, i_PossibleMoves.Count);
+                inputFromUserStr = i_PossibleMoves[randomIndex];
             }
 
             o_ColIndex = (int)(inputFromUserStr[0] - 'A' + 1) - 1;

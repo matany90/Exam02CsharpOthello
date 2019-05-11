@@ -92,7 +92,7 @@ After your choose, press Enter:");
             }
             else
             {
-                Controller.GetTurn(out rowIndex, out colIndex, possibleMoves);
+                Controller.GetTurn(out rowIndex, out colIndex, possibleMoves, m_IsTwoPlayer, m_PlayerTurn);
                 m_Board[rowIndex, colIndex] = m_PlayerTurn + 1;
                 UpdateBoard(rowIndex, colIndex);
                 if (m_PlayerTurn == 0)
@@ -149,7 +149,7 @@ After your choose, press Enter:");
             {
                 if (m_PlayerTurn == 0)
                 {
-                    legalMove = Regex.IsMatch(expression, @"\b0*12+1+2*0*\b");
+                    legalMove = Regex.IsMatch(expression, @"\b0*12+1+2*1*0*\b");
                     if (legalMove)
                     {
                         //test print
@@ -160,7 +160,7 @@ After your choose, press Enter:");
                 }
                 else
                 {
-                    legalMove = Regex.IsMatch(expression, @"\b0*21+2+1*0*\b");
+                    legalMove = Regex.IsMatch(expression, @"\b0*21+2+1*2*0*\b");
                     if (legalMove)
                     {
                         //test print
@@ -302,7 +302,7 @@ After your choose, press Enter:");
             {
                 if (m_PlayerTurn == 0)
                 {
-                    legalMove = Regex.IsMatch(expression, @"\b0*12+1+2*0*\b");
+                    legalMove = Regex.IsMatch(expression, @"\b0*12+1+2*1*0*\b");
                     if (legalMove)
                     {
                         UpdateLine(i_Row, i_Col, directions[directionIndex], ref m_FirstUserScore, ref m_SecondUserScore);
@@ -310,7 +310,7 @@ After your choose, press Enter:");
                 }
                 else
                 {
-                    legalMove = Regex.IsMatch(expression, @"\b0*21+2+1*0*\b");
+                    legalMove = Regex.IsMatch(expression, @"\b0*21+2+1*2*0*\b");
                     if (legalMove)
                     {
                         UpdateLine(i_Row, i_Col, directions[directionIndex], ref m_SecondUserScore, ref m_FirstUserScore);
