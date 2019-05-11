@@ -19,7 +19,7 @@ namespace Ex02_Othelo
             //arr[4, 3] = 2;
             //arr[3, 4] = 2;
             //UserUI.DrawBoard(8, arr, 1);
-            //Console.ReadLine();
+            Console.ReadLine();
         }
     }
 }

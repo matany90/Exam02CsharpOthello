@@ -62,5 +62,18 @@ namespace Ex02_Othelo
             o_ColIndex = (int)(inputFromUserStr[0] - 'A' + 1) - 1;
             o_RowIndex = int.Parse(inputFromUserStr[1].ToString()) - 1;
         }
+
+        public static void EndGame(string i_FName, string i_SName, int i_FScore, int i_SScore)
+        {
+            if (i_FScore > i_SScore)
+            {
+                UserUI.ShowMessage("The Winner is " + i_FName);
+            }
+            else
+            {
+                UserUI.ShowMessage("The Winner is " + i_SName);
+            }
+            //UserUI.ShowMessage("Play again?");
+        }
     }
 }

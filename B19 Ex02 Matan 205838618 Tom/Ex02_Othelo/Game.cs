@@ -24,10 +24,13 @@ namespace Ex02_Othelo
             m_PlayerTurn = 0;
             m_GameOver = false;
             Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
+            UserUI.ShowMessage("F:" + m_FirstUserScore + " S:" + m_SecondUserScore);
+
             while (!m_GameOver)
             {
                 PlayTurn();
             }
+            Controller.EndGame(m_FirstUser, m_SecondUser, m_FirstUserScore, m_SecondUserScore);
 
         }
 
@@ -69,26 +72,41 @@ After your choose, press Enter:");
             m_Board[middleIndex - 1, middleIndex - 1] = 1;
             m_Board[middleIndex, middleIndex - 1] = 2;
             m_Board[middleIndex - 1, middleIndex] = 2;
+            m_FirstUserScore = 2;
+            m_SecondUserScore = 2;
             //m_Board[1, 4] = 1;
         }
 
         public void PlayTurn()
         {
             int rowIndex, colIndex;
-
-            Controller.GetTurn(out rowIndex, out colIndex, CalculateMoves());
-            m_Board[rowIndex, colIndex] = m_PlayerTurn + 1;
-            UpdateBoard(rowIndex, colIndex);
-            m_PlayerTurn = (m_PlayerTurn + 1) % 2;
-            Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
-            if (m_PlayerTurn == 0)
+            List<string> possibleMoves = CalculateMoves();
+            if (possibleMoves.Count == 0)
             {
-                m_FirstUserScore++;
+                if (m_FirstUserScore + m_SecondUserScore == m_BoardSize * m_BoardSize)
+                {
+                    m_GameOver = true;
+                }
+                m_PlayerTurn = (m_PlayerTurn + 1) % 2;
+                
             }
             else
             {
-                m_SecondUserScore++;
+                Controller.GetTurn(out rowIndex, out colIndex, possibleMoves);
+                m_Board[rowIndex, colIndex] = m_PlayerTurn + 1;
+                UpdateBoard(rowIndex, colIndex);
+                if (m_PlayerTurn == 0)
+                {
+                    m_FirstUserScore++;
+                }
+                else
+                {
+                    m_SecondUserScore++;
+                }
+                m_PlayerTurn = (m_PlayerTurn + 1) % 2;
             }
+            Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
+            UserUI.ShowMessage("F:" + m_FirstUserScore + " S:" + m_SecondUserScore);
         }
 
         public List<string> CalculateMoves()
@@ -287,7 +305,7 @@ After your choose, press Enter:");
                     legalMove = Regex.IsMatch(expression, @"\b0*12+1+2*0*\b");
                     if (legalMove)
                     {
-                        UpdateLine(i_Row, i_Col, directions[directionIndex]);
+                        UpdateLine(i_Row, i_Col, directions[directionIndex], ref m_FirstUserScore, ref m_SecondUserScore);
                     }
                 }
                 else
@@ -295,14 +313,14 @@ After your choose, press Enter:");
                     legalMove = Regex.IsMatch(expression, @"\b0*21+2+1*0*\b");
                     if (legalMove)
                     {
-                        UpdateLine(i_Row, i_Col, directions[directionIndex]);
+                        UpdateLine(i_Row, i_Col, directions[directionIndex], ref m_SecondUserScore, ref m_FirstUserScore);
                     }
                 }
                 directionIndex++;
             }
         }
 
-        private void UpdateLine(int i_Row, int i_Col, string i_Direction)
+        private void UpdateLine(int i_Row, int i_Col, string i_Direction, ref int io_AddPlayerScore, ref int io_DecPlayerScore)
         {
             switch (i_Direction)
             {
@@ -311,6 +329,8 @@ After your choose, press Enter:");
                     {
                         m_Board[i_Row, i_Col + 1] = m_PlayerTurn + 1;
                         i_Col++;
+                        io_AddPlayerScore++;
+                        io_DecPlayerScore--;
                     }
                     break;
                 case "Left":
@@ -318,6 +338,8 @@ After your choose, press Enter:");
                     {
                         m_Board[i_Row, i_Col - 1] = m_PlayerTurn + 1;
                         i_Col--;
+                        io_AddPlayerScore++;
+                        io_DecPlayerScore--;
                     }
                     break;
                 case "Up":
@@ -325,6 +347,8 @@ After your choose, press Enter:");
                     {
                         m_Board[i_Row + 1, i_Col] = m_PlayerTurn + 1;
                         i_Row++;
+                        io_AddPlayerScore++;
+                        io_DecPlayerScore--;
                     }
                     break;
                 case "Down":
@@ -332,6 +356,8 @@ After your choose, press Enter:");
                     {
                         m_Board[i_Row - 1, i_Col] = m_PlayerTurn + 1;
                         i_Row--;
+                        io_AddPlayerScore++;
+                        io_DecPlayerScore--;
                     }
                     break;
                 case "UpRight":
@@ -340,6 +366,8 @@ After your choose, press Enter:");
                         m_Board[i_Row - 1, i_Col + 1] = m_PlayerTurn + 1;
                         i_Row--;
                         i_Col++;
+                        io_AddPlayerScore++;
+                        io_DecPlayerScore--;
                     }
                     break;
                 case "UpLeft":
@@ -348,6 +376,8 @@ After your choose, press Enter:");
                         m_Board[i_Row - 1, i_Col - 1] = m_PlayerTurn + 1;
                         i_Row--;
                         i_Col--;
+                        io_AddPlayerScore++;
+                        io_DecPlayerScore--;
                     }
                     break;
                 case "DownRight":
@@ -356,6 +386,8 @@ After your choose, press Enter:");
                         m_Board[i_Row + 1, i_Col + 1] = m_PlayerTurn + 1;
                         i_Row++;
                         i_Col++;
+                        io_AddPlayerScore++;
+                        io_DecPlayerScore--;
                     }
                     break;
                 case "DownLeft":
@@ -364,6 +396,8 @@ After your choose, press Enter:");
                         m_Board[i_Row + 1, i_Col - 1] = m_PlayerTurn + 1;
                         i_Row++;
                         i_Col--;
+                        io_AddPlayerScore++;
+                        io_DecPlayerScore--;
                     }
                     break;
                 default:
