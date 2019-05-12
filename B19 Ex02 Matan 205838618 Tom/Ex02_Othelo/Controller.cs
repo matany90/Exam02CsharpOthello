@@ -46,7 +46,7 @@ namespace Ex02_Othelo
             UserUI.DrawBoard(i_BoardSize, i_Pieces, i_PlayerTurn);
         }
 
-        public static void GetTurn(ref int? o_RowIndex, ref int? o_ColIndex, List<string> i_PossibleMoves, bool i_IsTwoPlayer, int i_PlayerTurn, ref bool io_GameOver)
+        public static void GetTurn(ref int? io_RowIndex, ref int? io_ColIndex, List<string> i_PossibleMoves, bool i_IsTwoPlayer, int i_PlayerTurn, ref bool io_GameOver)
         {
             string inputFromUserStr = "";
 
@@ -78,8 +78,8 @@ namespace Ex02_Othelo
 
             if (!io_GameOver)
             {
-                o_ColIndex = (int)(inputFromUserStr[0] - 'A' + 1) - 1;
-                o_RowIndex = int.Parse(inputFromUserStr[1].ToString()) - 1;
+                io_ColIndex = (int)(inputFromUserStr[0] - 'A' + 1) - 1;
+                io_RowIndex = int.Parse(inputFromUserStr[1].ToString()) - 1;
             }
         }
 
