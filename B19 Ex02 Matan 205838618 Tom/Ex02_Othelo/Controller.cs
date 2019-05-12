@@ -73,8 +73,10 @@ namespace Ex02_Othelo
             o_RowIndex = int.Parse(inputFromUserStr[1].ToString()) - 1;
         }
 
-        public static void EndGame(string i_FName, string i_SName, int i_FScore, int i_SScore)
+        public static bool EndGame(string i_FName, string i_SName, int i_FScore, int i_SScore)
         {
+            string playerChoice;
+
             if (i_FScore > i_SScore)
             {
                 UserUI.ShowMessage("The Winner is " + i_FName);
@@ -83,7 +85,16 @@ namespace Ex02_Othelo
             {
                 UserUI.ShowMessage("The Winner is " + i_SName);
             }
-            //UserUI.ShowMessage("Play again?");
+
+            UserUI.ShowMessage("Play again?[y/n]");
+            playerChoice = UserUI.GetInputFromUser().ToLower();
+            while (playerChoice != "y" && playerChoice != "n")
+            {
+                ShowMessage("Your input is invalid. Please try again, then press Enter");
+                playerChoice = GetInputFromUser().ToLower();
+            }
+
+            return playerChoice.Equals("n");
         }
     }
 }
