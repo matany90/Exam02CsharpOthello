@@ -90,19 +90,19 @@ After your choose, press Enter:");
             m_SecondUserScore = 2;
             m_PlayerTurn = 0;
             m_GameOver = false;
+            m_IsAvaliableMoveFirstPlayer = true;
+            m_IsAvaliableMoveSecondPlayer = true;
         }
 
         private void PlayTurn()
         {
-            int rowIndex, colIndex;
+            int? rowIndex = null, colIndex = null;
             List<string> possibleMoves = CalculateMoves();
             if (possibleMoves.Count == 0)
             {
                 if (m_FirstUserScore + m_SecondUserScore == m_BoardSize * m_BoardSize)
                 {
                     m_GameOver = true;
-                    m_IsAvaliableMoveFirstPlayer = true;
-                    m_IsAvaliableMoveSecondPlayer = true;
                 }
                 else
                 {
@@ -119,26 +119,29 @@ After your choose, press Enter:");
             }
             else
             {
-                Controller.GetTurn(out rowIndex, out colIndex, possibleMoves, m_IsTwoPlayer, m_PlayerTurn);
-                m_Board[rowIndex, colIndex] = m_PlayerTurn + 1;
-                UpdateBoard(rowIndex, colIndex);
-                if (m_PlayerTurn == 0)
+                Controller.GetTurn(ref rowIndex, ref colIndex, possibleMoves, m_IsTwoPlayer, m_PlayerTurn, ref m_GameOver);
+                if (!m_GameOver)
                 {
-                    m_FirstUserScore++;
+                    m_Board[rowIndex.GetValueOrDefault(), colIndex.GetValueOrDefault()] = m_PlayerTurn + 1;
+                    UpdateBoard(rowIndex.GetValueOrDefault(), colIndex.GetValueOrDefault());
+                    m_IsAvaliableMoveSecondPlayer = true;
+                    m_IsAvaliableMoveFirstPlayer = true;
+                    if (m_PlayerTurn == 0)
+                    {
+                        m_FirstUserScore++;
+                    }
+                    else
+                    {
+                        m_SecondUserScore++;
+                    }
+                    m_PlayerTurn = (m_PlayerTurn + 1) % 2;
                 }
-                else
-                {
-                    m_SecondUserScore++;
-                }
-                m_PlayerTurn = (m_PlayerTurn + 1) % 2;
             }
             Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
 
             if (!m_IsAvaliableMoveFirstPlayer && !m_IsAvaliableMoveSecondPlayer)
             {
                 m_GameOver = true;
-                m_IsAvaliableMoveFirstPlayer = true;
-                m_IsAvaliableMoveSecondPlayer = true;
             }
             else if (!m_IsAvaliableMoveFirstPlayer || !m_IsAvaliableMoveSecondPlayer)
             {
