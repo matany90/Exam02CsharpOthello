@@ -2,7 +2,7 @@
 
 namespace Ex02_Othelo
 {
-    class UserUI
+    internal class UserUI
     {
         public static void ShowMessage(string i_MessageToShow)
         {

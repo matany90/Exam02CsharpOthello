@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Ex02_Othelo
 {
-    class Game
+    internal class Game
     {
         private string m_FirstUser;
         private string m_SecondUser;
@@ -83,9 +83,6 @@ After your choose, press Enter:");
             m_Board[middleIndex - 1, middleIndex - 1] = 1;
             m_Board[middleIndex, middleIndex - 1] = 2;
             m_Board[middleIndex - 1, middleIndex] = 2;
-            //m_Board[0, 5] = 2;
-            // m_Board[0, 0] = 0;
-            //m_Board[0, 1] = 0;
             m_FirstUserScore = 2;
             m_SecondUserScore = 2;
             m_PlayerTurn = 0;
@@ -115,6 +112,7 @@ After your choose, press Enter:");
                         m_IsAvaliableMoveSecondPlayer = false;
                     }
                 }
+
                 m_PlayerTurn = (m_PlayerTurn + 1) % 2;              
             }
             else
@@ -134,11 +132,12 @@ After your choose, press Enter:");
                     {
                         m_SecondUserScore++;
                     }
+
                     m_PlayerTurn = (m_PlayerTurn + 1) % 2;
                 }
             }
-            Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
 
+            Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
             if (!m_IsAvaliableMoveFirstPlayer && !m_IsAvaliableMoveSecondPlayer)
             {
                 m_GameOver = true;
@@ -147,8 +146,11 @@ After your choose, press Enter:");
             {
                 Controller.ShowMessage(string.Format(
 @"No move is available for Player {0}, 
-the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
+the turn goes to Player {1}",
+((m_PlayerTurn + 1) % 2) + 1,
+m_PlayerTurn + 1));
             }
+
             Controller.ShowMessage("F:" + m_FirstUserScore + " S:" + m_SecondUserScore);
         }
 
@@ -169,6 +171,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                     }
                 }
             }
+
             return possibleMoves;
         }
 
@@ -187,7 +190,6 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
             regexExpression.Add(checkTopRight(i_Row, i_Col));
             regexExpression.Add(checkTopLeft(i_Row, i_Col));
 
-
             foreach (string expression in regexExpression)
             {
                 if (m_PlayerTurn == 0)
@@ -195,9 +197,9 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                     legalMove = Regex.IsMatch(expression, @"\b0*12+1+2*1*0*\b");
                     if (legalMove)
                     {
-                        //test print
+                        ////test print
                         Console.WriteLine("Expression " + expression + " for index: " + (char)('A' + i_Col) + (i_Row + 1).ToString());
-                        //test print
+                        ////test print
                         break;
                     }
                 }
@@ -206,13 +208,14 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                     legalMove = Regex.IsMatch(expression, @"\b0*21+2+1*2*0*\b");
                     if (legalMove)
                     {
-                        //test print
+                        ////test print
                         Console.WriteLine("Expression " + expression + " for index: " + (char)('A' + i_Col) + (i_Row + 1).ToString());
-                        //test print
+                        ////test print
                         break;
                     }
                 }
             }
+
             m_Board[i_Row, i_Col] = 0;
 
             return legalMove;
@@ -220,7 +223,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
 
         private string checkRight(int i_Row, int i_Col)
         {
-            string rightString = "";
+            string rightString = string.Empty;
             while (i_Col < m_BoardSize)
             {
                 rightString += m_Board[i_Row, i_Col].ToString();
@@ -232,7 +235,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
 
         private string checkLeft(int i_Row, int i_Col)
         {
-            string leftString = "";
+            string leftString = string.Empty;
 
             while (i_Col >= 0)
             {
@@ -242,9 +245,10 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
 
             return leftString;
         }
+
         private string checkDown(int i_Row, int i_Col)
         {
-            string downString = "";
+            string downString = string.Empty;
 
             while (i_Row >= 0)
             {
@@ -257,7 +261,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
 
         private string checkUp(int i_Row, int i_Col)
         {
-            string upString = "";
+            string upString = string.Empty;
 
             while (i_Row < m_BoardSize)
             {
@@ -270,7 +274,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
 
         private string checkBottomRight(int i_Row, int i_Col)
         {
-            string bottomRightString = "";
+            string bottomRightString = string.Empty;
 
             while (i_Row < m_BoardSize && i_Col < m_BoardSize)
             {
@@ -284,7 +288,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
 
         private string checkBottomLeft(int i_Row, int i_Col)
         {
-            string bottomLeftString = "";
+            string bottomLeftString = string.Empty;
 
             while (i_Row < m_BoardSize && i_Col >= 0)
             {
@@ -298,7 +302,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
 
         private string checkTopRight(int i_Row, int i_Col)
         {
-            string topRightString = "";
+            string topRightString = string.Empty;
 
             while (i_Row >= 0 && i_Col < m_BoardSize)
             {
@@ -312,7 +316,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
 
         private string checkTopLeft(int i_Row, int i_Col)
         {
-            string topLeftString = "";
+            string topLeftString = string.Empty;
 
             while (i_Row >= 0 && i_Col >= 0)
             {
@@ -340,7 +344,6 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
             regexExpression.Add(checkTopRight(i_Row, i_Col));
             regexExpression.Add(checkTopLeft(i_Row, i_Col));
 
-
             foreach (string expression in regexExpression)
             {
                 if (m_PlayerTurn == 0)
@@ -359,6 +362,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                         UpdateLine(i_Row, i_Col, directions[directionIndex], ref m_SecondUserScore, ref m_FirstUserScore);
                     }
                 }
+
                 directionIndex++;
             }
         }
@@ -375,6 +379,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                         io_AddPlayerScore++;
                         io_DecPlayerScore--;
                     }
+
                     break;
                 case "Left":
                     while (m_Board[i_Row, i_Col - 1] != m_PlayerTurn + 1)
@@ -384,6 +389,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                         io_AddPlayerScore++;
                         io_DecPlayerScore--;
                     }
+
                     break;
                 case "Up":
                     while (m_Board[i_Row + 1, i_Col] != m_PlayerTurn + 1)
@@ -393,6 +399,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                         io_AddPlayerScore++;
                         io_DecPlayerScore--;
                     }
+
                     break;
                 case "Down":
                     while (m_Board[i_Row - 1, i_Col] != m_PlayerTurn + 1)
@@ -402,6 +409,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                         io_AddPlayerScore++;
                         io_DecPlayerScore--;
                     }
+
                     break;
                 case "UpRight":
                     while (m_Board[i_Row - 1, i_Col + 1] != m_PlayerTurn + 1)
@@ -412,6 +420,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                         io_AddPlayerScore++;
                         io_DecPlayerScore--;
                     }
+
                     break;
                 case "UpLeft":
                     while (m_Board[i_Row - 1, i_Col - 1] != m_PlayerTurn + 1)
@@ -422,6 +431,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                         io_AddPlayerScore++;
                         io_DecPlayerScore--;
                     }
+
                     break;
                 case "DownRight":
                     while (m_Board[i_Row + 1, i_Col + 1] != m_PlayerTurn + 1)
@@ -432,6 +442,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                         io_AddPlayerScore++;
                         io_DecPlayerScore--;
                     }
+
                     break;
                 case "DownLeft":
                     while (m_Board[i_Row + 1, i_Col - 1] != m_PlayerTurn + 1)
@@ -442,6 +453,7 @@ the turn goes to Player {1}", ((m_PlayerTurn + 1) % 2) + 1, m_PlayerTurn + 1));
                         io_AddPlayerScore++;
                         io_DecPlayerScore--;
                     }
+
                     break;
                 default:
                     break;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Ex02_Othelo
 {
-    class Controller
+    internal class Controller
     {
         public static void ShowMessage(string i_MessageToShow)
         {
@@ -48,7 +48,7 @@ namespace Ex02_Othelo
 
         public static void GetTurn(ref int? io_RowIndex, ref int? io_ColIndex, List<string> i_PossibleMoves, bool i_IsTwoPlayer, int i_PlayerTurn, ref bool io_GameOver)
         {
-            string inputFromUserStr = "";
+            string inputFromUserStr = string.Empty;
 
             if (i_IsTwoPlayer || (!i_IsTwoPlayer && i_PlayerTurn == 0))
             {
