@@ -4,9 +4,7 @@ namespace Ex02_Othelo
 {
     internal class GameUI
     {
-        private string m_FirstUserName;
-        private string m_SecondUserName;
-        private Game m_Game = new Game();
+        private Controller m_Controller = new Controller();
 
         public GameUI()
         {
@@ -18,25 +16,24 @@ namespace Ex02_Othelo
         private void initUserPreferences()
         {
             Console.WriteLine("Please enter name for Player 1 and then press Enter: ");
-            m_FirstUserName = Console.ReadLine();
+            m_Controller.SetFirstUserName(Console.ReadLine());
             Console.WriteLine(
 @"Would you like to play against another player, or against the computer?
 Please press P for a game against another player, and C for playing against the computer.
 After your choose, press Enter:");
-
-            while (!m_Game.SetIsTwoPlayer(Console.ReadLine().ToLower()))
+            while (!m_Controller.SetIsTwoPlayer(Console.ReadLine().ToLower()))
             {
                 Console.WriteLine("Your input is invalid. Please try again, then press Enter");
             }
 
-            if (m_Game.IsTwoPlayer)
+            if (m_Controller.GetIsTwoPlayer())
             {
                 Console.WriteLine("Please enter name for Player 2 and then press Enter: ");
-                m_SecondUserName = Console.ReadLine();
+                m_Controller.SetSecondUserName(Console.ReadLine());
             }
             else
             {
-                m_SecondUserName = "Computer";
+                m_Controller.SetSecondUserName("Computer");
             }
 
             Console.WriteLine(
@@ -44,7 +41,7 @@ After your choose, press Enter:");
 For board size 6X6, please press button 6
 For board size 8X8, please press button 8
 After your choose, press Enter:");
-            while (!m_Game.SetBoardSize(Console.ReadLine()))
+            while (!m_Controller.SetBoardSize(Console.ReadLine()))
             {
                 Console.WriteLine("Your input is invalid. Please try again, then press Enter");
             }
@@ -52,9 +49,9 @@ After your choose, press Enter:");
 
         private void startGame()
         {
-            m_Game.InitBoard();
-            drawBoard(m_Game.BoardSize, m_Game.Board, m_Game.PlayerTurn, m_FirstUserName, m_SecondUserName, m_Game.FirstUserScore, m_Game.SecondUserScore);
-            while (!m_Game.GameOver)
+            m_Controller.InitBoard();
+            drawBoard(m_Controller.GetBoardSize(), m_Controller.GetBoard(), m_Controller.GetPlayerTurn(), m_Controller.GetFirstUserName(), m_Controller.GetSecondUserName(), m_Controller.GetFirstUserScore(), m_Controller.GetSecondUserScore());
+            while (!m_Controller.IsGameOver())
             {
                 playTurn();
             }
@@ -65,49 +62,72 @@ After your choose, press Enter:");
         private void playTurn()
         {
             string strFromUser = string.Empty;
-            if (!m_Game.CheckAvailableMoves())
+
+            if (m_Controller.CheckAvailableMoves())
             {
-                m_Game.HandleNoAvailableMoves();
-            }
-            else
-            {
-                if (!m_Game.IsComputerTurn())
+                if (m_Controller.GetIsTwoPlayer() || (!m_Controller.GetIsTwoPlayer() && m_Controller.GetPlayerTurn() == 0))
                 {
                     strFromUser = Console.ReadLine().ToUpper();
-                    while (!m_Game.GetTurn(strFromUser) && !m_Game.IsUserWantToExit(strFromUser))
+                    while (!m_Controller.GetTurn(strFromUser) && strFromUser != "Q")
                     {
                         Console.WriteLine("illigal move. Please try again, then press Enter");
                         strFromUser = Console.ReadLine().ToUpper();
                     }
-                    m_Game.CheckIfUserWantToExit(strFromUser);
+
+                    if (strFromUser == "Q")
+                    {
+                        m_Controller.SetGameOver(true);
+                    }
                 }
                 else
                 {
-                    m_Game.GetTurn();
+                    m_Controller.GetTurn();
                 }
             }
-            drawBoard(m_Game.BoardSize, m_Game.Board, m_Game.PlayerTurn, m_FirstUserName, m_SecondUserName, m_Game.FirstUserScore, m_Game.SecondUserScore);
-            m_Game.CheckIfNoAvailableMovesForBothPlayers();
-            if (m_Game.IsNoAvailableMovesForOnePlayer())
+            else
+            {
+                if (m_Controller.GetFirstUserScore() + m_Controller.GetSecondUserScore() == m_Controller.GetBoardSize() * m_Controller.GetBoardSize())
+                {
+                    m_Controller.SetGameOver(true);
+                }
+                else
+                {
+                    if (m_Controller.GetPlayerTurn() == 0)
+                    {
+                        m_Controller.SetAvailableMoveFirstPlayer(false);
+                    }
+                    else
+                    {
+                        m_Controller.SetAvailableMoveSecondPlayer(false);
+                    }
+                }
+            }
+
+            drawBoard(m_Controller.GetBoardSize(), m_Controller.GetBoard(), m_Controller.GetPlayerTurn(), m_Controller.GetFirstUserName(), m_Controller.GetSecondUserName(), m_Controller.GetFirstUserScore(), m_Controller.GetSecondUserScore());
+            if (!m_Controller.GetAvailableMoveFirstPlayer() && !m_Controller.GetAvailableMoveSecondPlayer())
+            {
+                m_Controller.SetGameOver(true);
+            }
+            else if (!m_Controller.GetAvailableMoveFirstPlayer() || !m_Controller.GetAvailableMoveSecondPlayer())
             {
                 Console.WriteLine(string.Format(
 @"No move is available for Player {0}, 
 the turn goes to Player {1}",
-m_Game.PlayerTurn + 1,
-((m_Game.PlayerTurn + 1) % 2) + 1));
-                m_Game.NextTurn();
+m_Controller.GetPlayerTurn() + 1,
+((m_Controller.GetPlayerTurn() + 1) % 2) + 1));
+                m_Controller.NextTurn();
             }
         }
 
         private void endGame()
         {
-            if (m_Game.IsFirstPlayerWon())
+            if (m_Controller.GetFirstUserScore() > m_Controller.GetSecondUserScore())
             {
-                Console.WriteLine("The Winner is " + m_FirstUserName);
+                Console.WriteLine("The Winner is " + m_Controller.GetFirstUserName());
             }
-            else if (m_Game.IsSecondPlayerWon())
+            else if (m_Controller.GetFirstUserScore() < m_Controller.GetSecondUserScore())
             {
-                Console.WriteLine("The Winner is " + m_SecondUserName);
+                Console.WriteLine("The Winner is " + m_Controller.GetSecondUserName());
             }
             else
             {
@@ -115,7 +135,7 @@ m_Game.PlayerTurn + 1,
             }
 
             Console.WriteLine("Play again?[y/n] {default is n}");
-            if (m_Game.IsPlayAgain(Console.ReadLine().ToLower()))
+            if (m_Controller.IsPlayAgain(Console.ReadLine().ToLower()))
             {
                 startGame();
             }
