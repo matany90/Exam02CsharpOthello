@@ -33,8 +33,8 @@
   <ItemGroup>
     <Compile Include="Controller.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="GameUI.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="UserUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Ex02.ConsoleUtils">

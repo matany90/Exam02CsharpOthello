@@ -6,7 +6,7 @@ namespace Ex02_Othelo
     {
         public static void Main()
         {
-            Game game = new Game();
+            GameUI game = new GameUI();
 
             Console.ReadLine();
         }

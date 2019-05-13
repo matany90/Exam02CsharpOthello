@@ -5,110 +5,181 @@ namespace Ex02_Othelo
 {
     internal class Controller
     {
-        public static void ShowMessage(string i_MessageToShow)
+        private Game m_Game = new Game();
+
+        public void SetFirstUserName(string i_Name)
         {
-            UserUI.ShowMessage(i_MessageToShow);
+            m_Game.FirstUser = i_Name;
         }
 
-        public static string GetInputFromUser()
+        public string GetFirstUserName()
         {
-            return UserUI.GetInputFromUser();
+            return m_Game.FirstUser;
         }
 
-        public static bool GetTwoPlayerUserChoice()
+        public int GetFirstUserScore()
         {
-            string playerChoice = GetInputFromUser().ToLower();
+            return m_Game.FirstUserScore;
+        }
 
-            while (playerChoice != "p" && playerChoice != "c")
+        public int GetSecondUserScore()
+        {
+            return m_Game.SecondUserScore;
+        }
+
+        public void SetSecondUserName(string i_Name)
+        {
+            m_Game.SecondUser = i_Name;
+        }
+
+        public string GetSecondUserName()
+        {
+            return m_Game.SecondUser;
+        }
+
+        public bool SetIsTwoPlayer(string i_Choise)
+        {
+            bool isValidInput = true;
+
+            if (i_Choise != "p" && i_Choise != "c")
             {
-                ShowMessage("Your input is invalid. Please try again, then press Enter");
-                playerChoice = GetInputFromUser().ToLower();
+                isValidInput = false;
             }
-
-            return playerChoice.Equals("p");
-        }
-
-        public static int GetBoardSizeUserChoice()
-        {
-            string playerChoice = GetInputFromUser();
-
-            while (playerChoice != "6" && playerChoice != "8")
+            else
             {
-                ShowMessage("Your input is invalid. Please try again, then press Enter");
-                playerChoice = GetInputFromUser();
-            }
-
-            return int.Parse(playerChoice);
-        }
-
-        public static void DrawBoard(int i_BoardSize, int[,] i_Pieces, int i_PlayerTurn)
-        {
-            UserUI.DrawBoard(i_BoardSize, i_Pieces, i_PlayerTurn);
-        }
-
-        public static void GetTurn(ref int? io_RowIndex, ref int? io_ColIndex, List<string> i_PossibleMoves, bool i_IsTwoPlayer, int i_PlayerTurn, ref bool io_GameOver)
-        {
-            string inputFromUserStr = string.Empty;
-
-            if (i_IsTwoPlayer || (!i_IsTwoPlayer && i_PlayerTurn == 0))
-            {
-                inputFromUserStr = UserUI.GetInputFromUser();
-                inputFromUserStr = inputFromUserStr.ToUpper();
-                if (inputFromUserStr != "Q")
+                if (i_Choise.Equals("p"))
                 {
-                    while (!i_PossibleMoves.Contains(inputFromUserStr))
-                    {
-                        UserUI.ShowMessage("Illegal move, try again");
-                        inputFromUserStr = UserUI.GetInputFromUser();
-                        inputFromUserStr = inputFromUserStr.ToUpper();
-                    }
+                    m_Game.IsTwoPlayer = true;
                 }
                 else
                 {
-                    io_GameOver = true;
+                    m_Game.IsTwoPlayer = false;
                 }
             }
+
+            return isValidInput;
+        }
+
+        public bool GetIsTwoPlayer()
+        {
+            return m_Game.IsTwoPlayer;
+        }
+
+        public bool SetBoardSize(string i_Choise)
+        {
+            bool isValidInput = true;
+
+            if (i_Choise != "6" && i_Choise != "8")
+            {
+                isValidInput = false;
+            }
             else
+            {
+                m_Game.BoardSize = int.Parse(i_Choise);
+            }
+
+            return isValidInput;
+        }
+
+        public int GetBoardSize()
+        {
+            return m_Game.BoardSize;
+        }
+
+        public int[,] GetBoard()
+        {
+            return m_Game.Board;
+        }
+
+        public int GetPlayerTurn()
+        {
+            return m_Game.PlayerTurn;
+        }
+
+        public bool IsGameOver()
+        {
+            return m_Game.GameOver;
+        }
+
+        public void SetGameOver(bool i_Val)
+        {
+            m_Game.GameOver = i_Val;
+        }
+
+        public bool GetAvailableMoveFirstPlayer()
+        {
+            return m_Game.AvailableMoveFirstPlayer;
+        }
+
+        public void SetAvailableMoveFirstPlayer(bool i_Val)
+        {
+            m_Game.AvailableMoveFirstPlayer = i_Val;
+        }
+
+        public bool GetAvailableMoveSecondPlayer()
+        {
+            return m_Game.AvailableMoveSecondPlayer;
+        }
+
+        public void SetAvailableMoveSecondPlayer(bool i_Val)
+        {
+            m_Game.AvailableMoveSecondPlayer = i_Val;
+        }
+
+        public void InitBoard()
+        {
+            m_Game.InitBoard();
+        }
+
+        public bool CheckAvailableMoves()
+        {
+            bool isAvailableMoves = true;
+            List<string> possibleMoves = m_Game.CalculateMoves();
+
+            if (possibleMoves.Count == 0)
+            {
+                isAvailableMoves = false;
+            }
+
+            return isAvailableMoves;
+        }
+
+        public bool GetTurn(string i_Move = "")
+        {
+            bool isValidInput = true;
+            int rowIndex, colIndex;
+            List<string> possibleMoves = m_Game.CalculateMoves();
+
+            if (!m_Game.IsTwoPlayer && m_Game.PlayerTurn == 1)
             {
                 System.Threading.Thread.Sleep(1000);
                 Random rnd = new Random();
-                int randomIndex = rnd.Next(0, i_PossibleMoves.Count);
-                inputFromUserStr = i_PossibleMoves[randomIndex];
+                int randomIndex = rnd.Next(0, possibleMoves.Count);
+                i_Move = possibleMoves[randomIndex];
             }
 
-            if (!io_GameOver)
+            if (!possibleMoves.Contains(i_Move))
             {
-                io_ColIndex = (int)(inputFromUserStr[0] - 'A' + 1) - 1;
-                io_RowIndex = int.Parse(inputFromUserStr[1].ToString()) - 1;
-            }
-        }
-
-        public static bool EndGame(string i_FName, string i_SName, int i_FScore, int i_SScore)
-        {
-            string playerChoice;
-
-            if (i_FScore > i_SScore)
-            {
-                UserUI.ShowMessage("The Winner is " + i_FName);
-            }
-            else if (i_FScore < i_SScore)
-            {
-                UserUI.ShowMessage("The Winner is " + i_SName);
+                isValidInput = false;
             }
             else
             {
-                UserUI.ShowMessage("The game ended in draw");
+                colIndex = (int)(i_Move[0] - 'A' + 1) - 1;
+                rowIndex = int.Parse(i_Move[1].ToString()) - 1;
+                m_Game.PlayTurn(rowIndex, colIndex);
             }
 
-            UserUI.ShowMessage("Play again?[y/n]");
-            playerChoice = UserUI.GetInputFromUser().ToLower();
-            while (playerChoice != "y" && playerChoice != "n")
-            {
-                ShowMessage("Your input is invalid. Please try again, then press Enter");
-                playerChoice = GetInputFromUser().ToLower();
-            }
+            return isValidInput;
+        }
 
-            return playerChoice.Equals("n");
+        public void NextTurn()
+        {
+            m_Game.NextTurn();
+        }
+        
+        public bool IsPlayAgain(string i_Choise)
+        {
+            return i_Choise.Equals("y");
         }
     }
 }

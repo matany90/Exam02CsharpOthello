@@ -18,63 +18,72 @@ namespace Ex02_Othelo
         private bool m_IsAvaliableMoveFirstPlayer = true;
         private bool m_IsAvaliableMoveSecondPlayer = true;
 
-        public Game()
+        public string FirstUser
         {
-            Controller.ShowMessage("Welcome to Othelo!");
-            initUserPreferences();
-            StartGame();
+            get { return m_FirstUser; }
+            set { m_FirstUser = value; }
         }
 
-        private void StartGame()
+        public int FirstUserScore
         {
-            initBoard();
-            Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
-            UserUI.ShowMessage("F:" + m_FirstUserScore + " S:" + m_SecondUserScore);
-            while (!m_GameOver)
-            {
-                PlayTurn();
-            }
-
-            if (Controller.EndGame(m_FirstUser, m_SecondUser, m_FirstUserScore, m_SecondUserScore))
-            {
-                Controller.ShowMessage("Thanks for playing!");
-            }
-            else
-            {
-                StartGame();
-            }
+            get { return m_FirstUserScore; }
+            set { m_FirstUserScore = value; }
         }
 
-        private void initUserPreferences()
+        public string SecondUser
         {
-            Controller.ShowMessage("Please enter name for Player 1 and then press Enter: ");
-            m_FirstUser = Controller.GetInputFromUser();
-
-            Controller.ShowMessage(
-@"Would you like to play against another player, or against the computer?
-Please press P for a game against another player, and C for playing against the computer.
-After your choose, press Enter:");
-            m_IsTwoPlayer = Controller.GetTwoPlayerUserChoice();
-
-            if (m_IsTwoPlayer)
-            {
-                Controller.ShowMessage("Please enter name for Player 2 and then press Enter: ");
-                m_SecondUser = Controller.GetInputFromUser();
-            }
-            else
-            {
-                m_SecondUser = "Computer";
-            }
-
-            Controller.ShowMessage(
-@"Please select the board size for the game.
-For board size 6X6, please press button 6
-For board size 8X8, please press button 8
-After your choose, press Enter:");
-            m_BoardSize = Controller.GetBoardSizeUserChoice();
+            get { return m_SecondUser; }
+            set { m_SecondUser = value; }
         }
 
-        private void initBoard()
+        public int SecondUserScore
+        {
+            get { return m_SecondUserScore; }
+            set { m_SecondUserScore = value; }
+        }
+
+        public int BoardSize
+        {
+            get { return m_BoardSize; }
+            set { m_BoardSize = value; }
+        }
+
+        public bool IsTwoPlayer
+        {
+            get { return m_IsTwoPlayer; }
+            set { m_IsTwoPlayer = value; }
+        }
+
+        public int[,] Board
+        {
+            get { return m_Board; }
+        }
+
+        public int PlayerTurn
+        {
+            get { return m_PlayerTurn; }
+            set { m_PlayerTurn = value; }
+        }
+
+        public bool GameOver
+        {
+            get { return m_GameOver; }
+            set { m_GameOver = value; }
+        }
+
+        public bool AvailableMoveFirstPlayer
+        {
+            get { return m_IsAvaliableMoveFirstPlayer; }
+            set { m_IsAvaliableMoveFirstPlayer = value; }
+        }
+
+        public bool AvailableMoveSecondPlayer
+        {
+            get { return m_IsAvaliableMoveSecondPlayer; }
+            set { m_IsAvaliableMoveSecondPlayer = value; }
+        }
+        
+        public void InitBoard()
         {
             int middleIndex = m_BoardSize / 2;
 
@@ -91,70 +100,30 @@ After your choose, press Enter:");
             m_IsAvaliableMoveSecondPlayer = true;
         }
 
-        private void PlayTurn()
+        public void PlayTurn(int i_Row, int i_Col)
         {
-            int? rowIndex = null, colIndex = null;
-            List<string> possibleMoves = CalculateMoves();
-            if (possibleMoves.Count == 0)
+            m_Board[i_Row, i_Col] = m_PlayerTurn + 1;
+            UpdateBoard(i_Row, i_Col);
+            m_IsAvaliableMoveSecondPlayer = true;
+            m_IsAvaliableMoveFirstPlayer = true;
+            if (m_PlayerTurn == 0)
             {
-                if (m_FirstUserScore + m_SecondUserScore == m_BoardSize * m_BoardSize)
-                {
-                    m_GameOver = true;
-                }
-                else
-                {
-                    if (m_PlayerTurn == 0)
-                    {
-                        m_IsAvaliableMoveFirstPlayer = false;
-                    } 
-                    else
-                    {
-                        m_IsAvaliableMoveSecondPlayer = false;
-                    }
-                }
-
-                m_PlayerTurn = (m_PlayerTurn + 1) % 2;              
+                m_FirstUserScore++;
             }
             else
             {
-                Controller.GetTurn(ref rowIndex, ref colIndex, possibleMoves, m_IsTwoPlayer, m_PlayerTurn, ref m_GameOver);
-                if (!m_GameOver)
-                {
-                    m_Board[rowIndex.GetValueOrDefault(), colIndex.GetValueOrDefault()] = m_PlayerTurn + 1;
-                    UpdateBoard(rowIndex.GetValueOrDefault(), colIndex.GetValueOrDefault());
-                    m_IsAvaliableMoveSecondPlayer = true;
-                    m_IsAvaliableMoveFirstPlayer = true;
-                    if (m_PlayerTurn == 0)
-                    {
-                        m_FirstUserScore++;
-                    }
-                    else
-                    {
-                        m_SecondUserScore++;
-                    }
-
-                    m_PlayerTurn = (m_PlayerTurn + 1) % 2;
-                }
+                m_SecondUserScore++;
             }
 
-            Controller.DrawBoard(m_BoardSize, m_Board, m_PlayerTurn);
-            if (!m_IsAvaliableMoveFirstPlayer && !m_IsAvaliableMoveSecondPlayer)
-            {
-                m_GameOver = true;
-            }
-            else if (!m_IsAvaliableMoveFirstPlayer || !m_IsAvaliableMoveSecondPlayer)
-            {
-                Controller.ShowMessage(string.Format(
-@"No move is available for Player {0}, 
-the turn goes to Player {1}",
-((m_PlayerTurn + 1) % 2) + 1,
-m_PlayerTurn + 1));
-            }
-
-            Controller.ShowMessage("F:" + m_FirstUserScore + " S:" + m_SecondUserScore);
+            NextTurn();
         }
 
-        private List<string> CalculateMoves()
+        public void NextTurn()
+        {
+            m_PlayerTurn = (m_PlayerTurn + 1) % 2;
+        }
+
+        public List<string> CalculateMoves()
         {
             List<string> possibleMoves = new List<string>();
 
