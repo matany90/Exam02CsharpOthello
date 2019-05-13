@@ -6,8 +6,6 @@ namespace Ex02_Othelo
 {
     internal class Game
     {
-        private string m_FirstUser;
-        private string m_SecondUser;
         private int m_FirstUserScore;
         private int m_SecondUserScore;
         private int m_BoardSize;
@@ -18,22 +16,10 @@ namespace Ex02_Othelo
         private bool m_IsAvaliableMoveFirstPlayer = true;
         private bool m_IsAvaliableMoveSecondPlayer = true;
 
-        public string FirstUser
-        {
-            get { return m_FirstUser; }
-            set { m_FirstUser = value; }
-        }
-
         public int FirstUserScore
         {
             get { return m_FirstUserScore; }
             set { m_FirstUserScore = value; }
-        }
-
-        public string SecondUser
-        {
-            get { return m_SecondUser; }
-            set { m_SecondUser = value; }
         }
 
         public int SecondUserScore
@@ -98,6 +84,151 @@ namespace Ex02_Othelo
             m_GameOver = false;
             m_IsAvaliableMoveFirstPlayer = true;
             m_IsAvaliableMoveSecondPlayer = true;
+        }
+
+        public bool SetIsTwoPlayer(string i_Choise)
+        {
+            bool isValidInput = true;
+
+            if (i_Choise != "p" && i_Choise != "c")
+            {
+                isValidInput = false;
+            }
+            else
+            {
+                if (i_Choise.Equals("p"))
+                {
+                    IsTwoPlayer = true;
+                }
+                else
+                {
+                    IsTwoPlayer = false;
+                }
+            }
+
+            return isValidInput;
+        }
+
+        public bool SetBoardSize(string i_Choise)
+        {
+            bool isValidInput = true;
+
+            if (i_Choise != "6" && i_Choise != "8")
+            {
+                isValidInput = false;
+            }
+            else
+            {
+                BoardSize = int.Parse(i_Choise);
+            }
+
+            return isValidInput;
+        }
+
+        public bool IsPlayAgain(string i_Choise)
+        {
+            return i_Choise.Equals("y");
+        }
+
+        public bool CheckAvailableMoves()
+        {
+            bool isAvailableMoves = true;
+            List<string> possibleMoves = CalculateMoves();
+
+            if (possibleMoves.Count == 0)
+            {
+                isAvailableMoves = false;
+            }
+
+            return isAvailableMoves;
+        }
+
+        public bool GetTurn(string i_Move = "")
+        {
+            bool isValidInput = true;
+            int rowIndex, colIndex;
+            List<string> possibleMoves = CalculateMoves();
+
+            if (IsComputerTurn())
+            {
+                System.Threading.Thread.Sleep(1000);
+                Random rnd = new Random();
+                int randomIndex = rnd.Next(0, possibleMoves.Count);
+                i_Move = possibleMoves[randomIndex];
+            }
+
+            if (!possibleMoves.Contains(i_Move))
+            {
+                isValidInput = false;
+            }
+            else
+            {
+                colIndex = (int)(i_Move[0] - 'A' + 1) - 1;
+                rowIndex = int.Parse(i_Move[1].ToString()) - 1;
+                PlayTurn(rowIndex, colIndex);
+            }
+
+            return isValidInput;
+        }
+
+        public void CheckIfUserWantToExit(string i_Choise)
+        {
+             if (i_Choise.Equals("Q"))
+            {
+                m_GameOver = true;
+            }
+        }
+
+        public void CheckIfNoAvailableMovesForBothPlayers()
+        {
+            if (!m_IsAvaliableMoveFirstPlayer && !m_IsAvaliableMoveSecondPlayer)
+            {
+                GameOver = true;
+            }
+        }
+
+        public bool IsNoAvailableMovesForOnePlayer()
+        {
+            return (!m_IsAvaliableMoveFirstPlayer || !m_IsAvaliableMoveSecondPlayer) && GameOver == false;
+        }
+
+        public bool IsFirstPlayerWon()
+        {
+            return m_FirstUserScore > m_SecondUserScore;
+        }
+
+        public bool IsSecondPlayerWon()
+        {
+            return m_FirstUserScore < m_SecondUserScore;
+        }
+
+        public bool IsUserWantToExit(string i_Choise)
+        {
+            return i_Choise.Equals("Q");
+        }
+
+        public void HandleNoAvailableMoves()
+        {
+            if (FirstUserScore + SecondUserScore == BoardSize * BoardSize)
+            {
+                GameOver = true;
+            }
+            else
+            {
+                if (PlayerTurn == 0)
+                {
+                    AvailableMoveFirstPlayer = false;
+                }
+                else
+                {
+                    AvailableMoveSecondPlayer = false;
+                }
+            }
+        }
+
+        public bool IsComputerTurn()
+        {
+            return !IsTwoPlayer && PlayerTurn == 1; 
         }
 
         public void PlayTurn(int i_Row, int i_Col)

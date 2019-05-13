@@ -7,16 +7,6 @@ namespace Ex02_Othelo
     {
         private Game m_Game = new Game();
 
-        public void SetFirstUserName(string i_Name)
-        {
-            m_Game.FirstUser = i_Name;
-        }
-
-        public string GetFirstUserName()
-        {
-            return m_Game.FirstUser;
-        }
-
         public int GetFirstUserScore()
         {
             return m_Game.FirstUserScore;
@@ -25,16 +15,6 @@ namespace Ex02_Othelo
         public int GetSecondUserScore()
         {
             return m_Game.SecondUserScore;
-        }
-
-        public void SetSecondUserName(string i_Name)
-        {
-            m_Game.SecondUser = i_Name;
-        }
-
-        public string GetSecondUserName()
-        {
-            return m_Game.SecondUser;
         }
 
         public bool SetIsTwoPlayer(string i_Choise)
