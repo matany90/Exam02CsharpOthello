@@ -8,6 +8,7 @@ namespace Ex02_Othelo
         private string m_SecondUserName;
         private Game m_Game = new Game();
 
+        ////GameUI c'tor
         public GameUI()
         {
             Console.WriteLine("Welcome to Othelo!");
@@ -15,6 +16,7 @@ namespace Ex02_Othelo
             startGame();
         }
 
+        ////Takes user's preferences and assigns them to the logical class
         private void initUserPreferences()
         {
             Console.WriteLine("Please enter name for Player 1 and then press Enter: ");
@@ -50,18 +52,22 @@ After your choose, press Enter:");
             }
         }
 
+        ////Game starts 
         private void startGame()
         {
             m_Game.InitBoard();
             drawBoard(m_Game.BoardSize, m_Game.Board, m_Game.PlayerTurn, m_FirstUserName, m_SecondUserName, m_Game.FirstUserScore, m_Game.SecondUserScore);
+
             while (!m_Game.GameOver)
             {
-                playTurn();
+                playTurn();                
             }
 
             endGame();
         }
 
+        ////Takes a move from User, and assign it to the logical class
+        ////If no moves are available for the user, the method asks the logical class to handle the issue
         private void playTurn()
         {
             string strFromUser = string.Empty;
@@ -86,7 +92,7 @@ After your choose, press Enter:");
                     m_Game.GetTurn();
                 }
             }
-            drawBoard(m_Game.BoardSize, m_Game.Board, m_Game.PlayerTurn, m_FirstUserName, m_SecondUserName, m_Game.FirstUserScore, m_Game.SecondUserScore);
+            drawBoard(m_Game.BoardSize, m_Game.Board, m_Game.PlayerTurn, m_FirstUserName, m_SecondUserName, m_Game.FirstUserScore, m_Game.SecondUserScore);          
             m_Game.CheckIfNoAvailableMovesForBothPlayers();
             if (m_Game.IsNoAvailableMovesForOnePlayer())
             {
@@ -96,9 +102,11 @@ the turn goes to Player {1}",
 m_Game.PlayerTurn + 1,
 ((m_Game.PlayerTurn + 1) % 2) + 1));
                 m_Game.NextTurn();
+                Console.Write(drawPossibleMoves()); 
             }
         }
 
+        ////Checking which user won the game, and asks for re-game
         private void endGame()
         {
             if (m_Game.IsFirstPlayerWon())
@@ -125,6 +133,7 @@ m_Game.PlayerTurn + 1,
             }
         }
 
+        ////Draw board to Console
         private void drawBoard(int i_BoardSize, int[,] i_Pieces, int i_PlayerTurn, string i_FirstUserName, string i_SecondUserName, int i_FirstUserScore, int i_SecondUserScore)
         {
             char colMark = 'A';
@@ -163,8 +172,26 @@ m_Game.PlayerTurn + 1,
             }
 
             board += "Player " + (i_PlayerTurn + 1) + " Turn" + Environment.NewLine;
-            board += i_FirstUserName + ":" + i_FirstUserScore + " " + i_SecondUserName + ":" + i_SecondUserScore + Environment.NewLine;
+            board += i_FirstUserName + ": " + i_FirstUserScore + " " + i_SecondUserName + ": " + i_SecondUserScore + Environment.NewLine;
+            board += drawPossibleMoves();
             Console.Write(board);
+        }
+
+        ////Draw possible moves
+        private string drawPossibleMoves()
+        {
+            string possibleMoves = "Please select a move from the possible moves, and then press enter:" + Environment.NewLine;
+
+            if (m_Game.GameOver || !m_Game.AvailableMoveFirstPlayer || !m_Game.AvailableMoveSecondPlayer)
+            {
+                possibleMoves = string.Empty;
+            }
+            foreach (string move in m_Game.PossibleMoves)
+            {
+                possibleMoves += move + Environment.NewLine;
+            }
+
+            return possibleMoves;
         }
     }
 }
