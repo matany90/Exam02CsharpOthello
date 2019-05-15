@@ -158,7 +158,7 @@ namespace Ex02_Othelo
         }
 
         ////Takes a move from Player and puts a mark in the appropriate place.
-        ////If the player is the computer, a move is randomly selected (from possibleMoves)
+        ////If the player is the computer, a move is selected by AI (from possibleMoves)
         ////If the player is not the computer, the program will check move validation (if contains in possibleMoves)
         public bool GetTurn(string i_Move = "")
         {
@@ -168,10 +168,9 @@ namespace Ex02_Othelo
 
             if (IsComputerTurn())
             {
+                i_Move = computerBestChoiseAI();
                 System.Threading.Thread.Sleep(1000);
-                Random rnd = new Random();
-                int randomIndex = rnd.Next(0, m_PossibleMoves.Count);
-                i_Move = m_PossibleMoves[randomIndex];
+                
             }
 
             if (!m_PossibleMoves.Contains(i_Move))
@@ -186,6 +185,46 @@ namespace Ex02_Othelo
             }
 
             return isValidInput;
+        }
+
+        ////Calculates the best move for the computer from possible moves
+        ////Selects the move that will reduce maximum points from the first player
+        private string computerBestChoiseAI()
+        {
+            int[,] originalBoard = (int[,])m_Board.Clone();
+            int originalFirstUserScore = m_FirstUserScore;
+            int originalSecondUserScore = m_SecondUserScore;
+            int maxDifference = 0, beforeUpdateBoard, afterUpdateBoard, difference;
+            List<string> bestMoves = new List<string>();
+
+            foreach (string move in m_PossibleMoves)
+            {
+                int colIndex = (int)(move[0] - 'A' + 1) - 1;
+                int rowIndex = int.Parse(move[1].ToString()) - 1;
+
+                beforeUpdateBoard = m_FirstUserScore;
+                m_Board[rowIndex, colIndex] = 2;
+                updateBoard(rowIndex, colIndex);
+                afterUpdateBoard = m_FirstUserScore;
+                difference = beforeUpdateBoard - afterUpdateBoard;
+                if (difference > maxDifference)
+                {
+                    bestMoves.Clear();
+                    maxDifference = difference;
+                    bestMoves.Add((char)('A' + colIndex) + (rowIndex + 1).ToString());
+                }
+                else if (maxDifference == difference)
+                {
+                    bestMoves.Add((char)('A' + colIndex) + (rowIndex + 1).ToString());
+                }
+                m_Board = (int[,])originalBoard.Clone();
+                m_FirstUserScore = originalFirstUserScore;
+                m_SecondUserScore = originalSecondUserScore;
+            }
+            Random rnd = new Random();
+            int randomIndex = rnd.Next(0, bestMoves.Count);
+
+            return bestMoves[randomIndex];
         }
 
         ////Checks if the Player wants to exit 
