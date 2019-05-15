@@ -194,7 +194,7 @@ namespace Ex02_Othelo
             int[,] originalBoard = (int[,])m_Board.Clone();
             int originalFirstUserScore = m_FirstUserScore;
             int originalSecondUserScore = m_SecondUserScore;
-            int maxDifference = 0, beforeUpdateBoard, afterUpdateBoard, difference;
+            int maxDifference = 0, scoreBeforeUpdateBoard, scoreAfterUpdateBoard, scoreDifference;
             List<string> bestMoves = new List<string>();
 
             foreach (string move in m_PossibleMoves)
@@ -202,18 +202,18 @@ namespace Ex02_Othelo
                 int colIndex = (int)(move[0] - 'A' + 1) - 1;
                 int rowIndex = int.Parse(move[1].ToString()) - 1;
 
-                beforeUpdateBoard = m_FirstUserScore;
+                scoreBeforeUpdateBoard = m_FirstUserScore;
                 m_Board[rowIndex, colIndex] = 2;
                 updateBoard(rowIndex, colIndex);
-                afterUpdateBoard = m_FirstUserScore;
-                difference = beforeUpdateBoard - afterUpdateBoard;
-                if (difference > maxDifference)
+                scoreAfterUpdateBoard = m_FirstUserScore;
+                scoreDifference = scoreBeforeUpdateBoard - scoreAfterUpdateBoard;
+                if (scoreDifference > maxDifference)
                 {
                     bestMoves.Clear();
-                    maxDifference = difference;
+                    maxDifference = scoreDifference;
                     bestMoves.Add((char)('A' + colIndex) + (rowIndex + 1).ToString());
                 }
-                else if (maxDifference == difference)
+                else if (maxDifference == scoreDifference)
                 {
                     bestMoves.Add((char)('A' + colIndex) + (rowIndex + 1).ToString());
                 }
