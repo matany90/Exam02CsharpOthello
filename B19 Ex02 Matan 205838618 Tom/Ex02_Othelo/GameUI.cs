@@ -71,6 +71,7 @@ After your choose, press Enter:");
         private void playTurn()
         {
             string strFromUser = string.Empty;
+
             if (!m_Game.CheckAvailableMoves())
             {
                 m_Game.HandleNoAvailableMoves();
@@ -85,6 +86,7 @@ After your choose, press Enter:");
                         Console.WriteLine("illigal move. Please try again, then press Enter");
                         strFromUser = Console.ReadLine().ToUpper();
                     }
+
                     m_Game.CheckIfUserWantToExit(strFromUser);
                 }
                 else
@@ -92,6 +94,7 @@ After your choose, press Enter:");
                     m_Game.GetTurn();
                 }
             }
+
             drawBoard(m_Game.BoardSize, m_Game.Board, m_Game.PlayerTurn, m_FirstUserName, m_SecondUserName, m_Game.FirstUserScore, m_Game.SecondUserScore);          
             m_Game.CheckIfNoAvailableMovesForBothPlayers();
             if (m_Game.IsNoAvailableMovesForOnePlayer())
@@ -186,6 +189,7 @@ m_Game.PlayerTurn + 1,
             {
                 possibleMoves = string.Empty;
             }
+
             foreach (string move in m_Game.PossibleMoves)
             {
                 possibleMoves += move + Environment.NewLine;

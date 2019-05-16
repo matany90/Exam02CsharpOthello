@@ -15,7 +15,7 @@ namespace Ex02_Othelo
         private bool m_GameOver;
         private bool m_IsAvailableMoveFirstPlayer = true;
         private bool m_IsAvailableMoveSecondPlayer = true;
-        List<string> m_PossibleMoves = new List<string>();
+        private List<string> m_PossibleMoves = new List<string>();
 
         ////Get'rs & Set'rs
         public int FirstUserScore
@@ -147,8 +147,7 @@ namespace Ex02_Othelo
         public bool CheckAvailableMoves()
         {
             bool isAvailableMoves = true;
-            //CalculateMoves();
-
+            
             if (m_PossibleMoves.Count == 0)
             {
                 isAvailableMoves = false;
@@ -169,8 +168,7 @@ namespace Ex02_Othelo
             if (IsComputerTurn())
             {
                 i_Move = computerBestChoiseAI();
-                System.Threading.Thread.Sleep(1000);
-                
+                System.Threading.Thread.Sleep(1000);   
             }
 
             if (!m_PossibleMoves.Contains(i_Move))
@@ -217,10 +215,12 @@ namespace Ex02_Othelo
                 {
                     bestMoves.Add((char)('A' + colIndex) + (rowIndex + 1).ToString());
                 }
+
                 m_Board = (int[,])originalBoard.Clone();
                 m_FirstUserScore = originalFirstUserScore;
                 m_SecondUserScore = originalSecondUserScore;
             }
+
             Random rnd = new Random();
             int randomIndex = rnd.Next(0, bestMoves.Count);
 
@@ -328,7 +328,6 @@ namespace Ex02_Othelo
         public void CalculateMoves()
         {
             m_PossibleMoves.Clear();
-
             for (int i = 0; i < m_BoardSize; i++)
             {
                 for (int j = 0; j < m_BoardSize; j++)
@@ -360,7 +359,6 @@ namespace Ex02_Othelo
             regexExpression.Add(checkBottomLeft(i_Row, i_Col));
             regexExpression.Add(checkTopRight(i_Row, i_Col));
             regexExpression.Add(checkTopLeft(i_Row, i_Col));
-
             foreach (string expression in regexExpression)
             {
                 if (m_PlayerTurn == 0)
@@ -368,9 +366,6 @@ namespace Ex02_Othelo
                     legalMove = Regex.IsMatch(expression, @"\b0*12+1+2*1*0*\b");
                     if (legalMove)
                     {
-                        //////test print
-                        //Console.WriteLine("Expression " + expression + " for index: " + (char)('A' + i_Col) + (i_Row + 1).ToString());
-                        //////test print
                         break;
                     }
                 }
@@ -379,9 +374,6 @@ namespace Ex02_Othelo
                     legalMove = Regex.IsMatch(expression, @"\b0*21+2+1*2*0*\b");
                     if (legalMove)
                     {
-                        //////test print
-                        //Console.WriteLine("Expression " + expression + " for index: " + (char)('A' + i_Col) + (i_Row + 1).ToString());
-                        //////test print
                         break;
                     }
                 }
@@ -396,6 +388,7 @@ namespace Ex02_Othelo
         private string checkRight(int i_Row, int i_Col)
         {
             string rightString = string.Empty;
+
             while (i_Col < m_BoardSize)
             {
                 rightString += m_Board[i_Row, i_Col].ToString();
@@ -523,7 +516,6 @@ namespace Ex02_Othelo
             regexExpression.Add(checkBottomLeft(i_Row, i_Col));
             regexExpression.Add(checkTopRight(i_Row, i_Col));
             regexExpression.Add(checkTopLeft(i_Row, i_Col));
-
             foreach (string expression in regexExpression)
             {
                 if (m_PlayerTurn == 0)
